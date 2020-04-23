@@ -33,7 +33,6 @@ router.post(
         yelpID,
         vetName,
         postTitle,
-        userName,
         image_url,
         address,
         phone,
@@ -49,7 +48,6 @@ router.post(
 
       postFields.userName = user.userName;
       postFields.user = req.user.id;
-      if (userName) postFields.userName = userName;
       if (address) postFields.address = address;
       if (postTitle) postFields.postTitle = postTitle;
       if (yelpID) postFields.yelpID = yelpID;

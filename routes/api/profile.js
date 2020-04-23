@@ -13,7 +13,7 @@ router.get('/me', auth, async (req, res) => {
   try {
     const profile = await Profile.findOne({
       user: req.user.id
-    }).populate('user', ['name']);
+    });
 
     if (!profile) {
       return res.status(400).json({ msg: 'There is no profile for this user' });
@@ -227,15 +227,6 @@ router.put(
     }
 
     const { petName, gender, age, weight, breed, spayed_neutered } = req.body;
-
-    const petInfo = {
-      petName,
-      gender,
-      age,
-      weight,
-      breed,
-      spayed_neutered
-    };
 
     try {
       const profile = await Profile.findOne({ user: req.user.id });
