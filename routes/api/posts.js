@@ -12,14 +12,7 @@ const User = require('../../models/User');
 //@acess    Private
 router.post(
   '/',
-  [
-    auth,
-    [
-      check('yelpID', 'Yelp ID is required')
-        .not()
-        .isEmpty()
-    ]
-  ],
+  [auth, [check('yelpID', 'Yelp ID is required').not().isEmpty()]],
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -42,7 +35,7 @@ router.post(
         spay_neutered,
         laboratory,
         GI_stasis,
-        date
+        date,
       } = req.body;
       const postFields = {};
 
@@ -101,7 +94,7 @@ router.get('/', async (req, res) => {
     const count = await Post.find().countDocuments();
     res.json({
       posts: posts,
-      count: count
+      count: count,
     });
   } catch (err) {
     res.status(500).send('Server Error');
@@ -120,14 +113,14 @@ router.get('/user/:user_id', async (req, res) => {
       .skip((currentPage - 1) * perPage)
       .limit(perPage)
       .sort({
-        date: -1
+        date: -1,
       });
     const count = await Post.find({
-      user: req.params.user_id
+      user: req.params.user_id,
     }).countDocuments();
     res.json({
       posts: posts,
-      count: count
+      count: count,
     });
   } catch (err) {
     if (err.kind === 'ObjectId') {
@@ -187,7 +180,7 @@ router.put('/useful/:post_id', auth, async (req, res) => {
     const post = await Post.findById(req.params.post_id);
 
     if (
-      post.useful.filter(useful => useful.user.toString() === req.user.id)
+      post.useful.filter((useful) => useful.user.toString() === req.user.id)
         .length > 0
     ) {
       return res.status(400).json({ msg: 'Post already useful' });
@@ -197,7 +190,7 @@ router.put('/useful/:post_id', auth, async (req, res) => {
 
     await post.save();
 
-    res.json(post.useful);
+    res.json(post);
   } catch (err) {
     res.status(500).send('Server Error');
   }
@@ -211,21 +204,21 @@ router.put('/notuseful/:post_id', auth, async (req, res) => {
     const post = await Post.findById(req.params.post_id);
 
     if (
-      post.useful.filter(useful => useful.user.toString() === req.user.id)
+      post.useful.filter((useful) => useful.user.toString() === req.user.id)
         .length === 0
     ) {
       return res.status(400).json({ msg: 'Post has not yet been useful' });
     }
 
     const removeIndex = post.useful
-      .map(useful => useful.user.toString())
+      .map((useful) => useful.user.toString())
       .indexOf(req.user.id);
 
     post.useful.splice(removeIndex, 1);
 
     await post.save();
 
-    res.json(post.useful);
+    res.json(post);
   } catch (err) {
     res.status(500).send('Server Error');
   }
@@ -239,8 +232,9 @@ router.put('/nailTrim/:post_id', auth, async (req, res) => {
     const post = await Post.findById(req.params.post_id);
 
     if (
-      post.nailTrim.filter(nailTrim => nailTrim.user.toString() === req.user.id)
-        .length > 0
+      post.nailTrim.filter(
+        (nailTrim) => nailTrim.user.toString() === req.user.id
+      ).length > 0
     ) {
       return res.status(400).json({ msg: 'Nail trim checked' });
     }
@@ -263,14 +257,15 @@ router.put('/notnailTrim/:post_id', auth, async (req, res) => {
     const post = await Post.findById(req.params.post_id);
 
     if (
-      post.nailTrim.filter(nailTrim => nailTrim.user.toString() === req.user.id)
-        .length === 0
+      post.nailTrim.filter(
+        (nailTrim) => nailTrim.user.toString() === req.user.id
+      ).length === 0
     ) {
       return res.status(400).json({ msg: 'Nail Trim canceled' });
     }
 
     const removeIndex = post.nailTrim
-      .map(nailTrim => nailTrim.user.toString())
+      .map((nailTrim) => nailTrim.user.toString())
       .indexOf(req.user.id);
 
     post.nailTrim.splice(removeIndex, 1);
@@ -292,7 +287,7 @@ router.put('/fleaCheck/:post_id', auth, async (req, res) => {
 
     if (
       post.fleaCheck.filter(
-        fleaCheck => fleaCheck.user.toString() === req.user.id
+        (fleaCheck) => fleaCheck.user.toString() === req.user.id
       ).length > 0
     ) {
       return res.status(400).json({ msg: 'Flea Checking checked' });
@@ -317,14 +312,14 @@ router.put('/notfleaCheck/:post_id', auth, async (req, res) => {
 
     if (
       post.fleaCheck.filter(
-        fleaCheck => fleaCheck.user.toString() === req.user.id
+        (fleaCheck) => fleaCheck.user.toString() === req.user.id
       ).length === 0
     ) {
       return res.status(400).json({ msg: 'Flea Checking canceled' });
     }
 
     const removeIndex = post.fleaCheck
-      .map(fleaCheck => fleaCheck.user.toString())
+      .map((fleaCheck) => fleaCheck.user.toString())
       .indexOf(req.user.id);
 
     post.fleaCheck.splice(removeIndex, 1);
@@ -346,7 +341,7 @@ router.put('/spay_neutere/:post_id', auth, async (req, res) => {
 
     if (
       post.spay_neutere.filter(
-        spay_neutere => spay_neutere.user.toString() === req.user.id
+        (spay_neutere) => spay_neutere.user.toString() === req.user.id
       ).length > 0
     ) {
       return res.status(400).json({ msg: 'Spay or neutere checked' });
@@ -371,14 +366,14 @@ router.put('/notspay_neutere/:post_id', auth, async (req, res) => {
 
     if (
       post.spay_neutere.filter(
-        spay_neutere => spay_neutere.toString() === req.user.id
+        (spay_neutere) => spay_neutere.toString() === req.user.id
       ).length === 0
     ) {
       return res.status(400).json({ msg: 'Spay or neutere canceled' });
     }
 
     const removeIndex = post.spay_neutere
-      .map(spay_neutere => spay_neutere.user.toString())
+      .map((spay_neutere) => spay_neutere.user.toString())
       .indexOf(req.user.id);
 
     post.spay_neutere.splice(removeIndex, 1);
@@ -400,7 +395,7 @@ router.put('/laboratory/:post_id', auth, async (req, res) => {
 
     if (
       post.laboratory.filter(
-        laboratory => laboratory.user.toString() === req.user.id
+        (laboratory) => laboratory.user.toString() === req.user.id
       ).length > 0
     ) {
       return res.status(400).json({ msg: 'Laboratory checked' });
@@ -425,14 +420,14 @@ router.put('/notlaboratory/:post_id', auth, async (req, res) => {
 
     if (
       post.laboratory.filter(
-        laboratory => laboratory.toString() === req.user.id
+        (laboratory) => laboratory.toString() === req.user.id
       ).length === 0
     ) {
       return res.status(400).json({ msg: 'Laboratory canceled' });
     }
 
     const removeIndex = post.laboratory
-      .map(laboratory => laboratory.user.toString())
+      .map((laboratory) => laboratory.user.toString())
       .indexOf(req.user.id);
 
     post.laboratory.splice(removeIndex, 1);
@@ -454,7 +449,7 @@ router.put('/GI_stasis/:post_id', auth, async (req, res) => {
 
     if (
       post.GI_stasis.filter(
-        GI_stasis => GI_stasis.user.toString() === req.user.id
+        (GI_stasis) => GI_stasis.user.toString() === req.user.id
       ).length > 0
     ) {
       return res.status(400).json({ msg: 'GI stasis checked' });
@@ -478,13 +473,13 @@ router.put('/notGI_stasis/:post_id', auth, async (req, res) => {
     const post = await Post.findById(req.params.post_id);
 
     if (
-      post.GI_stasis.filter(GI_stasis => GI_stasis.toString() === req.user.id)
+      post.GI_stasis.filter((GI_stasis) => GI_stasis.toString() === req.user.id)
         .length === 0
     ) {
       return res.status(400).json({ msg: 'GI stasis canceled' });
     }
 
-    const removeIndex = post.GI_stasis.map(GI_stasis =>
+    const removeIndex = post.GI_stasis.map((GI_stasis) =>
       GI_stasis.user.toString()
     ).indexOf(req.user.id);
 
