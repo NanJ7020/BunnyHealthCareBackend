@@ -243,7 +243,7 @@ router.put('/nailTrim/:post_id', auth, async (req, res) => {
 
     await post.save();
 
-    res.json(post.nailTrim);
+    res.json(post);
   } catch (err) {
     res.status(500).send('Server Error');
   }
@@ -272,7 +272,7 @@ router.put('/notnailTrim/:post_id', auth, async (req, res) => {
 
     await post.save();
 
-    res.json(post.nailTrim);
+    res.json(post);
   } catch (err) {
     res.status(500).send('Server Error');
   }
@@ -297,7 +297,7 @@ router.put('/fleaCheck/:post_id', auth, async (req, res) => {
 
     await post.save();
 
-    res.json(post.fleaCheck);
+    res.json(post);
   } catch (err) {
     res.status(500).send('Server Error');
   }
@@ -326,7 +326,7 @@ router.put('/notfleaCheck/:post_id', auth, async (req, res) => {
 
     await post.save();
 
-    res.json(post.fleaCheck);
+    res.json(post);
   } catch (err) {
     res.status(500).send('Server Error');
   }
@@ -340,18 +340,18 @@ router.put('/spay_neutere/:post_id', auth, async (req, res) => {
     const post = await Post.findById(req.params.post_id);
 
     if (
-      post.spay_neutere.filter(
-        (spay_neutere) => spay_neutere.user.toString() === req.user.id
+      post.spay_neutered.filter(
+        (spay_neutered) => spay_neutered.user.toString() === req.user.id
       ).length > 0
     ) {
       return res.status(400).json({ msg: 'Spay or neutere checked' });
     }
 
-    post.spay_neutere.unshift({ user: req.user.id });
+    post.spay_neutered.unshift({ user: req.user.id });
 
     await post.save();
 
-    res.json(post.spay_neutere);
+    res.json(post);
   } catch (err) {
     res.status(500).send('Server Error');
   }
@@ -380,7 +380,7 @@ router.put('/notspay_neutere/:post_id', auth, async (req, res) => {
 
     await post.save();
 
-    res.json(post.spay_neutere);
+    res.json(post);
   } catch (err) {
     res.status(500).send('Server Error');
   }
@@ -405,7 +405,7 @@ router.put('/laboratory/:post_id', auth, async (req, res) => {
 
     await post.save();
 
-    res.json(post.laboratory);
+    res.json(post);
   } catch (err) {
     res.status(500).send('Server Error');
   }
@@ -434,7 +434,7 @@ router.put('/notlaboratory/:post_id', auth, async (req, res) => {
 
     await post.save();
 
-    res.json(post.laboratory);
+    res.json(post);
   } catch (err) {
     res.status(500).send('Server Error');
   }
@@ -459,7 +459,7 @@ router.put('/GI_stasis/:post_id', auth, async (req, res) => {
 
     await post.save();
 
-    res.json(post.GI_stasis);
+    res.json(post);
   } catch (err) {
     res.status(500).send('Server Error');
   }
@@ -487,7 +487,7 @@ router.put('/notGI_stasis/:post_id', auth, async (req, res) => {
 
     await post.save();
 
-    res.json(post.GI_stasis);
+    res.json(post);
   } catch (err) {
     res.status(500).send('Server Error');
   }
